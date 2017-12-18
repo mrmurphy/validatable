@@ -111,7 +111,12 @@ runLive (Validator v) subject =
     in
     case liveErrors of
         [] ->
-            Valid value
+            case v.delayed of
+                Just _ ->
+                    Debouncing value { liveErrors = [] }
+
+                Nothing ->
+                    Valid value
 
         errors ->
             case v.delayed of
