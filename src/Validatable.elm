@@ -1,4 +1,4 @@
-module Validatable exposing (SimpleValidatableString, Validatable(..), Validator, getErrors, getOneError, getValue, init, isValid, reset, runAll, runLive, validator, withDelayed, withLive)
+module Validatable exposing (SimpleValidatableString, Validatable(..), Validator, getErrors, getOneError, getValidValue, getValue, init, isValid, reset, runAll, runLive, validator, withDelayed, withLive)
 
 {-| A library for storing data that can be invalid, and for checking it.
 
@@ -34,7 +34,7 @@ You can use `init`, or use the constructors for `Validatable` by hand.
 
 # For the view function
 
-@docs getValue, getOneError, isValid, getErrors
+@docs getValue, getValidValue, getOneError, isValid, getErrors
 
 -}
 
@@ -187,6 +187,24 @@ getValue subject =
 
         NotChecked v ->
             v
+
+
+{-| Returns a Maybe containing the the valid value of a validatable
+-}
+getValidValue : Validatable error value -> Maybe value
+getValidValue subject =
+    case subject of
+        Valid v ->
+            Just v
+
+        Invalid _ _ ->
+            Nothing
+
+        Debouncing _ _ ->
+            Nothing
+
+        NotChecked _ ->
+            Nothing
 
 
 {-| Gets the first error for the field, giving precedence to live errors.
